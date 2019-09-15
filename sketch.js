@@ -1,6 +1,6 @@
 function setup() {
-	offset = 10
-	screenSize = 800
+	offset = 7
+	screenSize = 700
 	percentage = 0.65
 	size = 3
 	strokeS = 4
@@ -33,7 +33,9 @@ function patternCheck(a, b) {
 	) {
 		a = scramble()
 		b = scramble()
-		patternCheck(a, b)
+		check = patternCheck(a, b)
+		a = check[0]
+		b = check[1]
 	}
 	return [a, b]
 }
@@ -50,7 +52,7 @@ function scramble() {
 }
 function printM(arr) {
 	for (i = 0; i < size; i++) {
-		console.log(a[i])
+		console.log(arr[i])
 	}
 }
 function mEqual(a, b) {
