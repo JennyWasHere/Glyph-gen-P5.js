@@ -3,12 +3,16 @@ function setup() {
 	lineSize = 10
 	//Controls how many nodes each glyphs has
 	nodes = 3
-	//Controls space between glyphs
-	spacing = lineSize
+	/*
+	Controls space between glyphs, 
+	The formula at times 1 will make the spacing the same as between lines inside a glyph
+	Golden ratio cause why not
+	*/
+	spacing = 1.618*(lineSize * nodes)/(nodes + 1)
 	//Chance for a line to spawn
 	percentage = Math.sqrt(1 / nodes)
 	//Thickness of the lines
-	thickness = 4
+	thickness = 5
 	//Line color and transparency
 	clr = color(206, 172, 65, 255)
 	//Starting position for the draw loop
@@ -20,19 +24,19 @@ function setup() {
 	background(18)
 	// put setup code here
 }
-
+//Draw a line to the right, at [x,y], lineSize long
 function lr(x, y) {
 	strokeWeight(thickness)
 	stroke(clr)
 	line(x, y, x + lineSize, y)
 }
-
+//Draw a line down, at [x,y], lineSize long
 function ld(x, y) {
 	strokeWeight(thickness)
 	stroke(clr)
 	line(x, y, x, y + lineSize)
 }
-
+//Recursive pattern checker
 function patternCheck(a, b) {
 	swOne = [[0, 1, 1], [1, 1, 1], [1, 1, 0]]
 	swTwo = [[1, 1, 0], [1, 1, 1], [0, 1, 1]]
@@ -113,8 +117,8 @@ function glyph(x, y) {
 			}
 		}
 	}
-	//if nothing was drawn try again
-	if (lines == 0) {
+	//if nothing or only 1 line was drawn, try again
+	if (lines <= 1) {
 		glyph(x, y)
 	}
 	//noLoop()
