@@ -8,7 +8,7 @@ function setup() {
 	The formula at times 1 will make the spacing the same as between lines inside a glyph
 	Golden ratio cause why not
 	*/
-	spacing = 1*(lineSize * nodes)/(nodes + 1)
+	spacing = 1.6180 * (lineSize * nodes) / (nodes + 1)
 	//Chance for a line to spawn
 	percentage = Math.sqrt(1 / nodes)
 	//Thickness of the lines
@@ -71,6 +71,7 @@ function printM(arr) {
 	for (i = 0; i < arr.length; i++) {
 		console.log(arr[i])
 	}
+	console.log()
 }
 
 //check if two matrices are equal
@@ -84,57 +85,59 @@ function mEqual(a, b) {
 	}
 	return true
 }
-function generateNodes(){
-	a = scramble(nodes, percentage)
-	b = scramble(nodes, percentage)
+function generateNodes() {
+	horr = scramble(nodes, percentage)
+	vert = scramble(nodes, percentage)
 	lines = 0
 	//glyph drawing loop
 	for (i = 0; i < nodes; i++) {
 		for (j = 0; j < nodes; j++) {
-			if (j != nodes - 1) {
+			if (j < nodes - 1) {
 				//checks adjacent horizontal nodes to see if both are truthy
-				if (b[i][j] && b[i][j + 1]) {
+				if (horr[i][j] && horr[i][j + 1]) {
 					lines++
 				}
 			}
-			if (i != nodes - 1) {
+			if (i < nodes - 1) {
 				//checks adjacent vertical nodes to see if both are truthy
-				if (a[i][j] && a[i + 1][j]) {
+				if (vert[i][j] && vert[i + 1][j]) {
 					lines++
 				}
 			}
 		}
 	}
 
-	if (lines<=2 || lines >= 9){
-		console.log('Recursion')
+	if (lines <= 2 || lines >= 9) {
 		return generateNodes()
 	}
-	return [a,b]
+	return [horr, vert]
 }
 function glyph(x, y) {
 
 	glyphNodes = generateNodes()
-	vs = glyphNodes[0]
-	hs = glyphNodes[1]
+	hs = glyphNodes[0]
+	vs = glyphNodes[1]
+	// printM(vs)
+	// printM(hs)
+
 
 	//check for patterns you dont want, mainly swastikas
 	if (nodes == 3) {
-		check = patternCheck(vs, hs)
-		vs = check[0]
-		hs = check[1]
+		check = patternCheck(hs, vs)
+		hs = check[0]
+		vs = check[1]
 	}
 	//glyph drawing loop
 	for (i = 0; i < nodes; i++) {
 		for (j = 0; j < nodes; j++) {
-			if (j != nodes - 1) {
+			if (j < nodes - 1) {
 				//checks adjacent horizontal nodes to see if both are truthy
 				if (hs[i][j] && hs[i][j + 1]) {
 					lr(x + (lineSize * j), y + (lineSize * i))
 				}
 			}
 
-			if (i != nodes - 1) {
+			if (i < nodes - 1) {
 				//checks adjacent vertical nodes to see if both are truthy
 				if (vs[i][j] && vs[i + 1][j]) {
 					ld(x + (lineSize * j), y + (lineSize * i))
