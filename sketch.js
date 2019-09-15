@@ -8,7 +8,7 @@ function setup() {
 	The formula at times 1 will make the spacing the same as between lines inside a glyph
 	Golden ratio cause why not
 	*/
-	spacing = 1.618*(lineSize * nodes)/(nodes + 1)
+	spacing = 1*(lineSize * nodes)/(nodes + 1)
 	//Chance for a line to spawn
 	percentage = Math.sqrt(1 / nodes)
 	//Thickness of the lines
@@ -44,8 +44,9 @@ function patternCheck(a, b) {
 		(mEqual(a, swOne) && mEqual(b, swTwo)) ||
 		(mEqual(a, swTwo) && mEqual(b, swOne))
 	) {
-		a = scramble(nodes, percentage)
-		b = scramble(nodes, percentage)
+		glyphNodes = generateNodes()
+		a = glyphNodes[0]
+		b = glyphNodes[1]
 		return patternCheck(a, b)
 	}
 	return [a, b]
@@ -57,7 +58,8 @@ function scramble(x, chance) {
 	for (i = 0; i < x; i++) {
 		b = []
 		for (j = 0; j < x; j++) {
-			b.push(Math.random() <= chance ? 1 : 0)
+			r = Math.random() <= chance ? 1 : 0
+			b.push(r)
 		}
 		a.push(b)
 	}
@@ -82,11 +84,39 @@ function mEqual(a, b) {
 	}
 	return true
 }
+function generateNodes(){
+	a = scramble(nodes, percentage)
+	b = scramble(nodes, percentage)
+	lines = 0
+	//glyph drawing loop
+	for (i = 0; i < nodes; i++) {
+		for (j = 0; j < nodes; j++) {
+			if (j != nodes - 1) {
+				//checks adjacent horizontal nodes to see if both are truthy
+				if (b[i][j] && b[i][j + 1]) {
+					lines++
+				}
+			}
+			if (i != nodes - 1) {
+				//checks adjacent vertical nodes to see if both are truthy
+				if (a[i][j] && a[i + 1][j]) {
+					lines++
+				}
+			}
+		}
+	}
 
+	if (lines<=2 || lines >= 9){
+		console.log('Recursion')
+		return generateNodes()
+	}
+	return [a,b]
+}
 function glyph(x, y) {
 
-	vs = scramble(nodes, percentage)
-	hs = scramble(nodes, percentage)
+	glyphNodes = generateNodes()
+	vs = glyphNodes[0]
+	hs = glyphNodes[1]
 
 	//check for patterns you dont want, mainly swastikas
 	if (nodes == 3) {
@@ -94,7 +124,6 @@ function glyph(x, y) {
 		vs = check[0]
 		hs = check[1]
 	}
-	lines = 0
 	//glyph drawing loop
 	for (i = 0; i < nodes; i++) {
 		for (j = 0; j < nodes; j++) {
@@ -102,7 +131,6 @@ function glyph(x, y) {
 				//checks adjacent horizontal nodes to see if both are truthy
 				if (hs[i][j] && hs[i][j + 1]) {
 					lr(x + (lineSize * j), y + (lineSize * i))
-					lines++
 				}
 			}
 
@@ -110,14 +138,9 @@ function glyph(x, y) {
 				//checks adjacent vertical nodes to see if both are truthy
 				if (vs[i][j] && vs[i + 1][j]) {
 					ld(x + (lineSize * j), y + (lineSize * i))
-					lines++
 				}
 			}
 		}
-	}
-	//if nothing or only 1 line was drawn, try again
-	if (lines <= 1) {
-		glyph(x, y)
 	}
 	//noLoop()
 }
