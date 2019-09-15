@@ -46,9 +46,7 @@ function patternCheck(a, b) {
 	) {
 		a = scramble(nodes, percentage)
 		b = scramble(nodes, percentage)
-		check = patternCheck(a, b)
-		a = check[0]
-		b = check[1]
+		return patternCheck(a, b)
 	}
 	return [a, b]
 }
