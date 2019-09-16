@@ -8,7 +8,7 @@ function setup() {
 	The formula at times 1 will make the spacing the same as between lines inside a glyph
 	Golden ratio cause why not
 	*/
-	spacing = 1.6180 * (lineSize * nodes) / (nodes + 1)
+	spacing = 1.618 * (lineSize * nodes) / (nodes + 1)
 	//Chance for a line to spawn
 	percentage = Math.sqrt(1 / nodes)
 	//Thickness of the lines
